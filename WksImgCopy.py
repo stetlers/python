@@ -16,7 +16,7 @@ def collect_images():
         list_of_src_images.append(detail_src_images)
     for des_img in all_des_images['Images']:
         # We only keep the images names in the destination list because that's all we need.
-        list_of_des_images.append(img['Name'])
+        list_of_des_images.append(des_img['Name'])
     return(list_of_src_images, list_of_des_images)
 
 
