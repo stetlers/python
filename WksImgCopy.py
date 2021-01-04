@@ -1,10 +1,12 @@
 import boto3
-wks_destination = boto3.client('workspaces', region_name='us-west-2')
-wks_source = boto3.client('workspaces', region_name='us-east-1')
+DESTINATION_REGION = 'us-west-2'
+SOURCE_REGION = 'us-east-1'
+WKS_DESTINATION = boto3.client('workspaces', region_name=DESTINATION_REGION)
+WKS_SOURCE = boto3.client('workspaces', region_name=SOURCE_REGION)
 
 def collect_images():
-    all_src_images = wks_source.describe_workspace_images()
-    all_des_images = wks_destination.describe_workspace_images()
+    all_src_images = WKS_SOURCE.describe_workspace_images()
+    all_des_images = WKS_DESTINATION.describe_workspace_images()
     list_of_src_images = []
     list_of_des_images = []
     for src_img in all_src_images['Images']:
@@ -22,8 +24,8 @@ def collect_images():
 
 def copy_wks_image(name, imgId):
     try:
-        wks_destination.copy_workspace_image(Name=name, Description='Copied with Lambda', SourceImageId=imgId, SourceRegion='us-east-1')
-        print('Copying {} to us-west-2...'.format(imgId))
+        WKS_DESTINATION.copy_workspace_image(Name=name, Description='Copied with Lambda', SourceImageId=imgId, SourceRegion=SOURCE_REGION)
+        print('Copying {} to {}...'.format(imgId, DESTINATION_REGION))
     except Exception as error:
         print('Copy Failed:', error)
 
@@ -37,4 +39,4 @@ for source_img in source_images:
         # Copy the image!
         copy_wks_image(source_img['Name'], source_img['ImageId'])
     else:
-        print("Nothing to copy.")
+        print('Nothing to copy from {} to {}.'.format(SOURCE_REGION, DESTINATION_REGION))
