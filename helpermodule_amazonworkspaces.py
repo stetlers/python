@@ -1,5 +1,6 @@
 """
 Helper module for Amazon Workspaces
+Author: Justin Stokes
 """
 import boto3
 
